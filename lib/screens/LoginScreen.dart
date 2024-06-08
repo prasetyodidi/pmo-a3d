@@ -13,11 +13,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    return   Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
@@ -57,9 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
               CustomButton(
                 text: 'Login',
                 onPressed: () {
-                  // Handle login button press
                       Navigator.push(context, MaterialPageRoute(builder: (builder) => Navbar()));
-
                 },
               ),
               SizedBox(height: 12,),
