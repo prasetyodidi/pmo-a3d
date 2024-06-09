@@ -6,3 +6,4 @@ double TITLE_FONTSIZE = 20.0;
 Color BLACK = Colors.black;
 Color WHITE = Colors.white;
 Color GREY = Colors.grey;
+Color RED = Colors.red;
