@@ -1,3 +1,8 @@
+import 'package:a3d/api/impl/auth.dart';
+import 'package:a3d/components/CustomButton.dart';
+import 'package:a3d/constants/index.dart';
+import 'package:a3d/screens/ProductListScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Navbar extends StatefulWidget {
@@ -13,18 +18,10 @@ class _NavbarState extends State<Navbar> {
   late int _selectedIndex;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Home Page',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
-    Text(
-      'Search Page',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
-    Text(
-      'Profile Page',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    ProductListScreen(),
+    ProductListScreen(),
+    ProductListScreen(),
+    ProductListScreen(),
   ];
 
   @override
@@ -41,31 +38,51 @@ class _NavbarState extends State<Navbar> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Bottom Navigation Bar Demo'),
-      ),
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
+    return WillPopScope(
+      onWillPop: () async {
+        // Block the back button press
+        return false;
+      },
+      child: Scaffold(
+        backgroundColor: WHITE,
+        body: _widgetOptions[_selectedIndex],
+        bottomNavigationBar: Theme(
+          data: ThemeData(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
+          child: BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.bag_fill),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.cart),
+                label: 'Search',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.chart_bar_circle_fill),
+                label: 'Search',
+              ),
+               BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.profile_circled),
+                label: 'Search',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            elevation: 0,
+            backgroundColor: WHITE,
+            selectedItemColor: BLACK,
+            unselectedItemColor: Colors.black.withOpacity(0.3),
+            onTap: _onItemTapped,
+            showSelectedLabels: false,
+            iconSize: 27,
+
+            showUnselectedLabels: false,
+            type: BottomNavigationBarType.fixed,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
+        ),
       ),
     );
   }

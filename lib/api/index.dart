@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'dart:async';
+
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpClient {
   final String baseUrl;
@@ -15,10 +16,15 @@ class HttpClient {
     return response;
   }
 
-  Future<http.Response> post(String endpoint, Map<String, String> fields) async {
+  Future<http.Response> post(String endpoint, Map<String, String> fields, {List<http.MultipartFile>? files}) async {
     final url = Uri.parse('$baseUrl$endpoint');
+    print(url);
     final request = http.MultipartRequest('POST', url)
       ..fields.addAll(fields);
+
+    if (files != null) {
+      request.files.addAll(files);
+    }
     
     final streamedResponse = await request.send().timeout(timeoutDuration);
     final response = await http.Response.fromStream(streamedResponse);
@@ -26,10 +32,14 @@ class HttpClient {
     return response;
   }
 
-  Future<http.Response> put(String endpoint, Map<String, String> fields) async {
+  Future<http.Response> put(String endpoint, Map<String, String> fields, {List<http.MultipartFile>? files}) async {
     final url = Uri.parse('$baseUrl$endpoint');
     final request = http.MultipartRequest('PUT', url)
       ..fields.addAll(fields);
+
+    if (files != null) {
+      request.files.addAll(files);
+    }
     
     final streamedResponse = await request.send().timeout(timeoutDuration);
     final response = await http.Response.fromStream(streamedResponse);
@@ -54,4 +64,13 @@ class HttpClient {
 }
 
 // Deklarasi variabel client secara global
-final httpClient = HttpClient('https://192.168.18.8:1876/api');
+final httpClient = HttpClient('http://192.168.18.8:1876/api');
+
+
+class Prefs {
+  static getUid() async { 
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt
+    ("uid");
+  }
+}

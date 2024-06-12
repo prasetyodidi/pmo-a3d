@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 class CustomButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final Color? backgroundColor;
+  final Color? textColor;
 
   const CustomButton({
     Key? key,
     required this.text,
     required this.onPressed,
+    this.backgroundColor = Colors.black,
+    this.textColor = Colors.white
   }) : super(key: key);
 
   @override
@@ -19,7 +23,7 @@ class CustomButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          backgroundColor: Colors.black,
+          backgroundColor: backgroundColor,
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10), // Adjust the value as needed
@@ -28,7 +32,7 @@ class CustomButton extends StatelessWidget {
         child: Text(text, style: TextStyle(
             fontSize: BASE_FONTSIZE,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: textColor,
           ),),
       ),
     );

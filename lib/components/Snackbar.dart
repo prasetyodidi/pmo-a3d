@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-void showErrorSnackbar(BuildContext context, String message) {
+void showErrorSnackbar(BuildContext context, String message, {int? seconds = 3}) {
   final snackBar = SnackBar(
     content: Text(message, style: TextStyle(color: Colors.white)),
     backgroundColor: Colors.red,
@@ -11,7 +11,7 @@ void showErrorSnackbar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-void showSuccessSnackbar(BuildContext context, String message) {
+void showSuccessSnackbar(BuildContext context, String message, {int? seconds = 3}) {
   final snackBar = SnackBar(
     content: Text(message, style: TextStyle(color: Colors.white)),
     backgroundColor: Colors.green,
@@ -22,7 +22,7 @@ void showSuccessSnackbar(BuildContext context, String message) {
   ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
-void showInfoSnackbar(BuildContext context, String message) {
+void showInfoSnackbar(BuildContext context, String message, {int? seconds = 3}) {
   final snackBar = SnackBar(
     content: Text(message, style: TextStyle(color: Colors.white)),
     backgroundColor: Colors.blue,

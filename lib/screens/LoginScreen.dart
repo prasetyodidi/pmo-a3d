@@ -4,7 +4,10 @@ import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/components/CustomTextField.dart';
 import 'package:a3d/components/Navbar.dart';
 import 'package:a3d/constants/index.dart';
+import 'package:a3d/screens/PaymentScreen.dart';
+import 'package:a3d/screens/RegisterScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -46,7 +49,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: CustomText(
                       text: "Masuk",
                       textStyle: TextStyle(
-                          fontSize: TITLE_FONTSIZE, fontWeight: FontWeight.bold)),
+                          fontSize: TITLE_FONTSIZE,
+                          fontWeight: FontWeight.bold)),
                 ),
                 Container(
                   child: CustomText(
@@ -86,18 +90,19 @@ class _LoginScreenState extends State<LoginScreen> {
                 CustomButton(
                   text: isLoadingLogin ? '...' : 'Login',
                   onPressed: () {
-  if (isLoadingLogin || !_formKey.currentState!.validate()) return; // Check if the form is valid
-  setState(() {
-    isLoadingLogin = true;
-  });
-  processLogin(context, _emailController.text, _passwordController.text)
-      .then((val) {
-    setState(() {
-      isLoadingLogin = false;
-    });
-  });
-},
-
+                    if (isLoadingLogin || !_formKey.currentState!.validate())
+                      return; // Check if the form is valid
+                    setState(() {
+                      isLoadingLogin = true;
+                    });
+                    processLogin(context, _emailController.text,
+                            _passwordController.text)
+                        .then((val) {
+                      setState(() {
+                        isLoadingLogin = false;
+                      });
+                    });
+                  },
                 ),
                 SizedBox(
                   height: 12,
@@ -110,9 +115,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 6,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (builder) => Navbar()));
+                      onTap: () async {
+                        final SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        if (prefs.getInt("user_id") != null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => PaymentScreen(
+                                        name: prefs.getString("nama")!,
+                                      )));
+                        } else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => RegisterScreen()));
+                        }
                       },
                       child: CustomText(
                           text: "Daftar",
