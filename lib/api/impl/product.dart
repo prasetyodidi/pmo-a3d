@@ -99,3 +99,71 @@ Future<void> processAddProduct(
     showErrorSnackbar(context, "Error : $e");
   }
 }
+
+Future<void> processUpdateProduct(
+    BuildContext context, String name, String price, XFile logo, int id) async {
+  Map<String, String> formData = ProductModel(
+          id: await Prefs.getUid(), name: name, price: int.parse(price))
+      .toJson();
+
+  try {
+    // Convert the XFile to MultipartFile
+    final file = await http.MultipartFile.fromPath('image', logo.path);
+
+    // Send the post request with the file
+    final response =
+        await httpClient.post("/products/update/${id}", formData, files: [file]);
+    var responseBody = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (responseBody['status']) {
+        showSuccessSnackbar(context, "Berhasil mengubah data produk",
+            seconds: 5);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Navbar()),
+              );
+      } else {
+        showErrorSnackbar(context, responseBody['message']);
+      }
+    } else {
+      showErrorSnackbar(context, "Internal Error");
+    }
+  } catch (e) {
+    print(e);
+    showErrorSnackbar(context, "Error : $e");
+  }
+}
+
+
+Future<void> processDeleteProduct(
+    BuildContext context, int id) async {
+
+  try {
+
+    // Send the post request with the file
+    final response =
+        await httpClient.post("/products/delete/${id}", {'' : ''});
+    var responseBody = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (responseBody['status']) {
+        showSuccessSnackbar(context, "Berhasil menghapus data produk",
+            seconds: 5);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        Navbar()),
+              );
+      } else {
+        showErrorSnackbar(context, responseBody['message']);
+      }
+    } else {
+      showErrorSnackbar(context, "Internal Error");
+    }
+  } catch (e) {
+    print(e);
+    showErrorSnackbar(context, "Error : $e");
+  }
+}

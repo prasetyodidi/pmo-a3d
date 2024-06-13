@@ -18,16 +18,15 @@ class PaymentScreen extends StatefulWidget {
 }
 
 class _PaymentScreenState extends State<PaymentScreen> {
- final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _summaryController = TextEditingController();
   bool isLoadingRegister = false;
   XFile? _paymentImage;
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-       onWillPop: () async {
+      onWillPop: () async {
         // Block the back button press
         return false;
       },
@@ -56,7 +55,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: CustomText(
                         text: "Pembayaran Pendaftaran",
                         textStyle: TextStyle(
-                            fontSize: TITLE_FONTSIZE, fontWeight: FontWeight.bold)),
+                            fontSize: TITLE_FONTSIZE,
+                            fontWeight: FontWeight.bold)),
                   ),
                   Container(
                     child: CustomText(
@@ -101,10 +101,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     backgroundColor: Colors.black.withOpacity(0.6),
                     text: 'Upload Bukti Pembayaran',
                     onPressed: () async {
-      XFile? image = await showImagePicker(context);
+                      XFile? image = await showImagePicker(context);
                       setState(() {
                         _paymentImage = image;
-                      });                  },
+                      });
+                    },
                   ),
                   SizedBox(
                     height: 12,
@@ -113,11 +114,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   CustomButton(
                     text: isLoadingRegister ? '...' : 'Register',
                     onPressed: () {
-                      if (isLoadingRegister || !_formKey.currentState!.validate()) return; // Check if the form is valid
+                      if (isLoadingRegister ||
+                          !_formKey.currentState!.validate())
+                        return; // Check if the form is valid
                       setState(() {
                         isLoadingRegister = true;
                       });
-                      processUploadPayment(context, _summaryController.text, _paymentImage!).then((onValue) {
+                      processUploadPayment(
+                              context, _summaryController.text, _paymentImage!)
+                          .then((onValue) {
                         setState(() {
                           isLoadingRegister = false;
                         });
@@ -136,8 +141,10 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (builder) => LoginScreen()));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (builder) => LoginScreen()));
                         },
                         child: CustomText(
                             text: "Login",
