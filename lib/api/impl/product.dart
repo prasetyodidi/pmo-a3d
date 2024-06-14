@@ -33,10 +33,39 @@ class ProductModel {
   // Method to convert a ProductModel to JSON
   Map<String, String> toJson() {
     return {
-      'uid': id.toString(),
+      'id': id.toString(),
       'name': name,
       'price': price.toString(),
     };
+  }
+}
+
+class ProductCart extends ProductModel {
+  int quantity;
+  ProductCart({
+    required int id,
+    required String name,
+    required int price,
+    required String image,
+    this.quantity = 1,
+  }) : super(id: id, name: name, price: price, image: image);
+
+  @override
+  Map<String, String> toJson() {
+    final Map<String, String> data = super.toJson();
+    data['quantity'] = this.quantity.toString();
+    return data;
+  }
+
+  factory ProductCart.fromJson(Map<String, dynamic> json) {
+    
+    return ProductCart(
+      id: int.parse(json['id']),
+      name: json['name'],
+      price: int.parse(json['price']),
+      image: json['image'] ?? '',
+      quantity: int.parse(json['quantity']),
+    );
   }
 }
 
@@ -46,6 +75,7 @@ Future<List<ProductModel>> getAllProduct(BuildContext context) async {
     final response = await httpClient
         .post("/products/all", {'uid': (await Prefs.getUid()).toString()});
     var responseBody = jsonDecode(response.body);
+    print(responseBody);
     if (response.statusCode == 200) {
       for (var product in responseBody['data']) {
         products.add(ProductModel(
@@ -82,12 +112,10 @@ Future<void> processAddProduct(
       if (responseBody['status']) {
         showSuccessSnackbar(context, "Berhasil Menambahkan Produk Baru",
             seconds: 5);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Navbar()),
-              );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Navbar()),
+        );
       } else {
         showErrorSnackbar(context, responseBody['message']);
       }
@@ -111,19 +139,17 @@ Future<void> processUpdateProduct(
     final file = await http.MultipartFile.fromPath('image', logo.path);
 
     // Send the post request with the file
-    final response =
-        await httpClient.post("/products/update/${id}", formData, files: [file]);
+    final response = await httpClient
+        .post("/products/update/${id}", formData, files: [file]);
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 200) {
       if (responseBody['status']) {
         showSuccessSnackbar(context, "Berhasil mengubah data produk",
             seconds: 5);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Navbar()),
-              );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Navbar()),
+        );
       } else {
         showErrorSnackbar(context, responseBody['message']);
       }
@@ -136,26 +162,19 @@ Future<void> processUpdateProduct(
   }
 }
 
-
-Future<void> processDeleteProduct(
-    BuildContext context, int id) async {
-
+Future<void> processDeleteProduct(BuildContext context, int id) async {
   try {
-
     // Send the post request with the file
-    final response =
-        await httpClient.post("/products/delete/${id}", {'' : ''});
+    final response = await httpClient.post("/products/delete/${id}", {'': ''});
     var responseBody = jsonDecode(response.body);
     if (response.statusCode == 200) {
       if (responseBody['status']) {
         showSuccessSnackbar(context, "Berhasil menghapus data produk",
             seconds: 5);
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        Navbar()),
-              );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Navbar()),
+        );
       } else {
         showErrorSnackbar(context, responseBody['message']);
       }
