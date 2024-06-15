@@ -5,10 +5,14 @@ import 'package:a3d/components/CustomButton.dart';
 import 'package:a3d/components/CustomDialog.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:a3d/screens/AddProductScreen.dart';
+import 'package:a3d/screens/LoginScreen.dart';
 import 'package:a3d/screens/UpdateProductScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:shimmer/shimmer.dart';
+
+import 'package:a3d/components/EmptyProduct.dart';
+import 'package:a3d/components/ListSkeleton.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({Key? key}) : super(key: key);
@@ -57,6 +61,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
         backgroundColor: WHITE,
         toolbarHeight: 100,
         automaticallyImplyLeading: false,
+        leading: InkWell(
+          onTap: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.clear();
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => LoginScreen()));
+          },
+          child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+        ),
         title: TextField(
           style: TextStyle(color: BLACK),
           onChanged: _filterProducts,
@@ -77,9 +90,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
         child: isLoading
-            ? _buildSkeletonLoader()
+            ? ListSkeleton()
             : filteredProducts.isEmpty
-                ? _buildEmptyProducts()
+                ? EmptyProduct()
                 : ListView.builder(
                     itemCount: filteredProducts.length,
                     itemBuilder: (BuildContext context, int index) {
@@ -100,7 +113,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           color: Colors.white,
         ),
         elevation: 0,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.green,
       ),
     );
   }
@@ -201,84 +214,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
             icon: Icon(Icons.delete),
             color: Colors.red,
           )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSkeletonLoader() {
-    return ListView.builder(
-      itemCount: 6,
-      itemBuilder: (context, index) {
-        return Shimmer.fromColors(
-          baseColor: Colors.grey[300]!,
-          highlightColor: Colors.grey[100]!,
-          child: Container(
-            height: 124,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Colors.white,
-            ),
-            margin: EdgeInsets.only(bottom: 10),
-            child: Row(
-              children: [
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.3,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: Colors.grey,
-                  ),
-                  margin: EdgeInsets.all(4),
-                ),
-                Expanded(
-                  flex: 6,
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 150,
-                          height: 20,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(height: 8),
-                        Container(
-                          width: 100,
-                          height: 20,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildEmptyProducts() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.inbox,
-            size: 100,
-            color: Colors.grey[200],
-          ),
-          SizedBox(height: 12),
-          Text(
-            'Produk tidak ditemukan',
-            style: TextStyle(
-              fontSize: BASE_FONTSIZE,
-              color: Colors.grey[600],
-            ),
-          ),
         ],
       ),
     );

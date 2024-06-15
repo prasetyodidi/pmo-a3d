@@ -70,7 +70,8 @@ final httpClient = HttpClient('http://192.168.18.8:1876/api');
 class Prefs {
   static getUid() async { 
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getInt
-    ("uid");
+    int uid = prefs.getInt("uid")!;
+    print("uiddddd ${uid}");
+    return uid;
   }
 }

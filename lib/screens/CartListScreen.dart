@@ -5,6 +5,7 @@ import 'package:a3d/components/CustomButton.dart';
 import 'package:a3d/components/EmptyProduct.dart';
 import 'package:a3d/components/ListSkeleton.dart';
 import 'package:a3d/constants/index.dart';
+import 'package:a3d/screens/CheckoutScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -67,6 +68,7 @@ class _CartListScreenState extends State<CartListScreen> {
         productsToCheckout.add(product);
       }
       product.quantity++;
+      product.subtotal = product.quantity * product.price;
     });
     _updateCart();
   }
@@ -75,6 +77,7 @@ class _CartListScreenState extends State<CartListScreen> {
     if (product.quantity > 0) {
       setState(() {
         product.quantity--;
+        product.subtotal = product.quantity * product.price;
         if (product.quantity == 0) {
           productsToCheckout.remove(product);
         }
@@ -130,8 +133,14 @@ class _CartListScreenState extends State<CartListScreen> {
           ? Padding(
               padding: const EdgeInsets.all(20.0),
               child: CustomButton(
-                onPressed: () {},
-                text: "Checkout",
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (builder) => CheckoutScreen(
+                              productsToCheckout: productsToCheckout)));
+                },
+                text: "Selanjutnya",
               ),
             )
           : SizedBox(),
@@ -184,7 +193,7 @@ class _CartListScreenState extends State<CartListScreen> {
                   ),
                   Text(
                     'Rp. ${NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0).format(product.price)}',
-                    style: TextStyle(color: BLACK, fontSize: BASE_FONTSIZE),
+                    style: TextStyle(color: BLACK, fontSize: BASE_FONTSIZE,),
                   ),
                 ],
               ),

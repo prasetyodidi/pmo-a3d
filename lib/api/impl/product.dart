@@ -33,6 +33,7 @@ class ProductModel {
   // Method to convert a ProductModel to JSON
   Map<String, String> toJson() {
     return {
+      'uid': id.toString(),
       'id': id.toString(),
       'name': name,
       'price': price.toString(),
@@ -42,18 +43,21 @@ class ProductModel {
 
 class ProductCart extends ProductModel {
   int quantity;
+  int subtotal;
   ProductCart({
     required int id,
     required String name,
     required int price,
     required String image,
-    this.quantity = 1,
+    this.quantity = 0,
+    this.subtotal = 0,
   }) : super(id: id, name: name, price: price, image: image);
 
   @override
   Map<String, String> toJson() {
     final Map<String, String> data = super.toJson();
     data['quantity'] = this.quantity.toString();
+    data['subtotal'] = this.subtotal.toString();
     return data;
   }
 
@@ -65,12 +69,14 @@ class ProductCart extends ProductModel {
       price: int.parse(json['price']),
       image: json['image'] ?? '',
       quantity: int.parse(json['quantity']),
+      subtotal: int.parse(json['subtotal']),
     );
   }
 }
 
 Future<List<ProductModel>> getAllProduct(BuildContext context) async {
   List<ProductModel> products = [];
+  print("benerannnn ${await Prefs.getUid()}");
   try {
     final response = await httpClient
         .post("/products/all", {'uid': (await Prefs.getUid()).toString()});

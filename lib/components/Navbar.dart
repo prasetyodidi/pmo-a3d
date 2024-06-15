@@ -73,7 +73,7 @@ class _NavbarState extends State<Navbar> {
             currentIndex: _selectedIndex,
             elevation: 0,
             backgroundColor: WHITE,
-            selectedItemColor: BLACK,
+            selectedItemColor: Colors.green,
             unselectedItemColor: Colors.black.withOpacity(0.3),
             onTap: _onItemTapped,
             showSelectedLabels: false,
