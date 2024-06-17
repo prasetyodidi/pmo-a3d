@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:a3d/api/impl/product.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:a3d/screens/AddProductScreen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -24,8 +25,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     getAllProduct(context).then((val) {
       setState(() {
         products = val;
-        filteredProducts = List.from(
-            products); // Initialize filteredProducts with all products initially
+        filteredProducts = List.from(products);
       });
     });
   }
@@ -63,11 +63,14 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 ),
               ),
             ),
-            ListView.builder(
+            SizedBox(height: 24),
+            ListView.separated(
+              shrinkWrap: true,
               itemCount: filteredProducts.length,
               itemBuilder: (BuildContext context, int index) {
                 return _buildProductCard(filteredProducts[index]);
               },
+              separatorBuilder: (context, index) => SizedBox(height: 16.0),
             ),
           ],
         ),
@@ -91,9 +94,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
   }
 
   Widget _buildProductCard(ProductModel product) {
-    // Decode base64 image string
     Uint8List imageBytes = base64Decode(product.image!);
 
+    final TextEditingController _controllerTotal = TextEditingController();
+    int total = 0;    
     return Container(
       height: 124,
       decoration: BoxDecoration(
@@ -147,6 +151,25 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ),
             ),
           ),
+          Row(
+            children: [
+              Icon(Icons.remove_circle_outline, size: 24, color: Colors.black),
+              SizedBox(
+                width: 24,
+                child: TextField(
+                  controller: _controllerTotal,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 5.0),
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter number',
+                  ),
+                  style: TextStyle(fontSize: 14.0), 
+                ),
+              ),
+              Icon(Icons.add_circle_outline, size: 24, color: Colors.black),
+            ],
+          )
         ],
       ),
     );
