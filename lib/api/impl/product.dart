@@ -62,14 +62,17 @@ class ProductCart extends ProductModel {
   }
 
   factory ProductCart.fromJson(Map<String, dynamic> json) {
-    
     return ProductCart(
-      id: int.parse(json['id']),
+      id: json['id'] is int ? json['id'] : int.parse(json['id']),
       name: json['name'],
-      price: int.parse(json['price']),
+      price: json['price'] is int ? json['price'] : int.parse(json['price']),
       image: json['image'] ?? '',
-      quantity: int.parse(json['quantity']),
-      subtotal: int.parse(json['subtotal']),
+      quantity: json['quantity'] is int
+          ? json['quantity']
+          : int.parse(json['quantity']),
+      subtotal: json['subtotal'] is int
+          ? json['subtotal']
+          : int.parse(json['subtotal']),
     );
   }
 }

@@ -110,10 +110,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
         },
         child: Icon(
           Icons.add,
-          color: Colors.white,
+          color: Colors.green,
         ),
         elevation: 0,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.green.withOpacity(0.2),
       ),
     );
   }
@@ -171,48 +171,61 @@ class _ProductListScreenState extends State<ProductListScreen> {
               ),
             ),
           ),
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (builder) => UpdateProductScreen(
-                          id: product.id,
-                          image: product.image!,
-                          name: product.name,
-                          price: product.price.toString())));
-            },
-            icon: Icon(Icons.edit_outlined),
-            color: Colors.blue,
+          Container(
+            decoration:BoxDecoration(
+              color: Colors.blue.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12)
+            ) ,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (builder) => UpdateProductScreen(
+                            id: product.id,
+                            image: product.image!,
+                            name: product.name,
+                            price: product.price.toString())));
+              },
+              icon: Icon(Icons.edit_outlined),
+              color: Colors.blue,
+            ),
           ),
-          IconButton(
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  return CustomDialog(
-                    title: 'ALERT',
-                    content: 'Apakah anda yakin akan menghapus produk ini?',
-                    actions: [
-                      CustomButton(
-                          text: "Hapus",
-                          onPressed: () {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            // Navigator.pop(context);
-                            processDeleteProduct(context, product.id)
-                                .then((onValue) {
-                              _getProducts();
-                            });
-                          })
-                    ],
-                  );
-                },
-              );
-            },
-            icon: Icon(Icons.delete),
-            color: Colors.red,
+          SizedBox(width: 4,),
+          Container(
+            decoration:BoxDecoration(
+              color: Colors.red.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12)
+            ) ,
+            child: IconButton(
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return CustomDialog(
+                      title: 'ALERT',
+                      content: 'Apakah anda yakin akan menghapus produk ini?',
+                      actions: [
+                        CustomButton(
+                            text: "Hapus",
+                            onPressed: () {
+                              setState(() {
+                                isLoading = true;
+                              });
+                              // Navigator.pop(context);
+                              processDeleteProduct(context, product.id)
+                                  .then((onValue) {
+                                _getProducts();
+                              });
+                            })
+                      ],
+                    );
+                  },
+                );
+              },
+              icon: Icon(Icons.delete),
+              color: Colors.red,
+            ),
           )
         ],
       ),
