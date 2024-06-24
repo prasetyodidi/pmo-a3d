@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:a3d/components/CustomButton.dart';
 import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/components/CustomTextField.dart';
-import 'package:a3d/components/Navbar.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:a3d/api/impl/product.dart';
 import 'package:flutter/material.dart';

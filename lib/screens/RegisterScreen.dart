@@ -143,7 +143,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   height: 12,
                 ),
                 CustomButton(
-                  backgroundColor: Colors.black.withOpacity(0.6),
+                  backgroundColor: Colors.black,
+                  textColor: Colors.white,
                   text: 'Upload Logo',
                   onPressed: () async {
                     XFile? image = await showImagePicker(context);

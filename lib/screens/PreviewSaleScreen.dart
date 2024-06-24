@@ -6,42 +6,46 @@ import 'package:a3d/api/impl/sale.dart';
 import 'package:a3d/components/CustomButton.dart';
 import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/components/ListSkeleton.dart';
+import 'package:a3d/components/Navbar.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class CheckoutScreen extends StatefulWidget {
-  CheckoutScreen({super.key, required this.productsToCheckout});
-  List<ProductCart> productsToCheckout;
+class PreviewSaleScreen extends StatefulWidget {
+  PreviewSaleScreen({super.key, required this.sale_id});
+  int sale_id;
   @override
-  State<CheckoutScreen> createState() => _CheckoutScreenState();
+  State<PreviewSaleScreen> createState() => _PreviewSaleScreenState();
 }
 
-class _CheckoutScreenState extends State<CheckoutScreen> {
-  String formattedToday = '';
-  late double totalShoppingAmount = 0;
-  bool isLoading = false;
+class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
+  bool isLoading = true;
+  late Sale sale = Sale(
+      date: "",
+      id: 0,
+      line_ids: [],
+      total: 0); // Assuming Sale has a default constructor
+
   @override
   void initState() {
+    getSale();
     super.initState();
+  }
 
-    // Formatting today's date
-    DateTime today = DateTime.now();
-    formattedToday = DateFormat('yyyy-MM-dd').format(today);
-
-    // Calculating the total shopping amount
-    totalShoppingAmount = widget.productsToCheckout.fold(
-      0,
-      (sum, item) => sum + item.price * item.quantity,
-    );
+  void getSale() async {
+    processGetSaleById(context, widget.sale_id).then((val) {
+      setState(() {
+        sale = val;
+        isLoading = false;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        // Block the back button press
         return false;
       },
       child: Scaffold(
@@ -55,6 +59,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               fontWeight: FontWeight.bold,
               color: Colors.black,
             ),
+          ),
+          leading: InkWell(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (builder) => Navbar()));
+            },
+            child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
           ),
         ),
         backgroundColor: Colors.white,
@@ -83,7 +94,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                             ),
                             Text(
                               DateFormat('dd MMMM yyyy')
-                                  .format(DateTime.parse(formattedToday)),
+                                  .format(DateTime.parse(sale.date)),
                               style: TextStyle(
                                   fontSize: TITLE_FONTSIZE,
                                   fontWeight: FontWeight.bold),
@@ -104,7 +115,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               width: 6,
                             ),
                             Text(
-                              "Rangkuman",
+                              "Penjualan",
                               style: TextStyle(
                                   fontSize: TITLE_FONTSIZE,
                                   fontWeight: FontWeight.bold),
@@ -114,10 +125,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                         SizedBox(
                           height: 8,
                         ),
-                        _summarize("Total Produk",
-                            widget.productsToCheckout.length.toString()),
-                        _summarize("Total",
-                            _formatCurrency(totalShoppingAmount.toInt())),
+                        _summarize("ID Penjualan", sale.id.toString()),
+                        _summarize(
+                            "Total Produk", sale.line_ids.length.toString()),
+                        _summarize("Total", _formatCurrency(sale.total)),
                         SizedBox(
                           height: 16,
                         ),
@@ -144,10 +155,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   ),
                   Expanded(
                     child: ListView.builder(
-                      itemCount: widget.productsToCheckout.length,
+                      itemCount: sale.line_ids.length,
                       itemBuilder: (BuildContext context, int index) {
-                        return _buildProductCard(
-                            widget.productsToCheckout[index]);
+                        return _buildProductCard(sale.line_ids[index]);
                       },
                     ),
                   ),
@@ -159,45 +169,22 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 height: 150,
                 color: Colors.grey.shade100,
               )
-            : Container(
-                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CustomButton(
-                      onPressed: () {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        List<Map<String, String>> products = [];
-                        for (ProductCart element in widget.productsToCheckout) {
-                          products.add({
-                            "product_id": element.id.toString(),
-                            "qty": element.quantity.toString()
-                          });
-                        }
+            : Padding(
+                padding: EdgeInsets.all(20),
+                child: CustomButton(
 
-                        processCreateSale(context, products, formattedToday)
-                            .then((onValue) {
-                          setState(() {
-                            isLoading = false;
-                          });
-                        });
-                      },
-                      text: "Buat Pesanan",
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    CustomButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      text: "Batalkan Pesanan",
-                      backgroundColor: Colors.red,
-                      textColor: Colors.red,
-                    ),
-                  ],
+                  onPressed: () {
+                    print("hahaha");
+                    setState(() {
+                      isLoading = true;
+                    });
+                    downloadPDF(context, sale.id).then((onValue) {
+                      setState(() {
+                        isLoading = false;
+                      });
+                    });
+                  },
+                  text: "Download PDF",
                 ),
               ),
       ),
@@ -235,60 +222,54 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             child: Padding(
               padding: const EdgeInsets.all(15.0),
               child: Column(
-                mainAxisSize: MainAxisSize.max,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     product.name,
                     maxLines: 3,
                     style: TextStyle(
-                      color: BLACK,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
+                  SizedBox(height: 4),
                   Text(
-                    'Rp. ${NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0).format(product.price)} x ${product.quantity.toString()}',
-                    style: TextStyle(color: BLACK, fontSize: BASE_FONTSIZE),
+                    '${_formatCurrency(product.subtotal)} x ${product.quantity.toString()}',
+                    style: TextStyle(color: Colors.black, fontSize: 16),
                   ),
                 ],
               ),
             ),
           ),
           Text(
-            "Rp. ${NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0).format(product.subtotal)}",
+            _formatCurrency(product.subtotal),
             style: TextStyle(
-                fontSize: BASE_FONTSIZE,
-                color: BLACK,
-                fontWeight: FontWeight.bold),
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _LeftRightText(String left, String right, TextStyle? rightStyle) {
+  Widget _LeftRightText(String left, String right, TextStyle rightStyle) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           left,
           style: TextStyle(
-            color: BLACK,
-            fontSize: BASE_FONTSIZE,
+            color: Colors.black,
+            fontSize: 16,
             fontWeight: FontWeight.bold,
           ),
         ),
         Text(
           right,
-          style: rightStyle ??
-              TextStyle(
-                color: BLACK,
-                fontSize: BASE_FONTSIZE,
-              ),
+          style: rightStyle,
         ),
       ],
     );

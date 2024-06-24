@@ -2,7 +2,6 @@ import 'package:a3d/api/impl/auth.dart';
 import 'package:a3d/components/CustomButton.dart';
 import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/components/CustomTextField.dart';
-import 'package:a3d/components/Navbar.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:a3d/screens/PaymentScreen.dart';
 import 'package:a3d/screens/RegisterScreen.dart';

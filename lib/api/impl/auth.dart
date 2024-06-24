@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'dart:convert'
 import 'package:a3d/api/index.dart';
 import 'package:a3d/components/Navbar.dart';
 import 'package:a3d/components/Snackbar.dart';
@@ -18,24 +18,41 @@ Future<void> processLogin(
   };
 
   try {
-    final response = await httpClient.post("/login", formData);
-    var responseBody = jsonDecode(response.body);
+    final response = await httpClient.post(
+      "/login",
+      formData,
+    );
+
     if (response.statusCode == 200) {
+      var responseBody = jsonDecode(response.body);
       if (responseBody['status']) {
-        final SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setInt("uid", responseBody['data']['uid']);
-        prefs.setString("nama", responseBody['data']['name']);
-        prefs.setString("email", responseBody['data']['username']);
-        showSuccessSnackbar(context, "Berhasil Login!");
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Navbar()),
-        );
+        // Extract session_id from cookies
+        String? rawCookie = response.headers['set-cookie'];
+        print("rawCok ${rawCookie}");
+        if (rawCookie != null) {
+          int index = rawCookie.indexOf(';');
+          String sessionId =
+              (index == -1) ? rawCookie : rawCookie.substring(0, index);
+
+          final SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setInt("uid", responseBody['data']['uid']);
+          prefs.setString("nama", responseBody['data']['name']);
+          prefs.setString("email", responseBody['data']['username']);
+          prefs.setString("session_id", sessionId); // Save session_id
+
+          showSuccessSnackbar(context, "Berhasil Login!");
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Navbar()),
+          );
+        } else {
+          showErrorSnackbar(context, "No session_id found in response cookies");
+        }
       } else {
         showErrorSnackbar(context, responseBody['message']);
       }
     } else {
-      showErrorSnackbar(context, "Register failed: ${response.body}");
+      showErrorSnackbar(context, "Login failed: ${response.body}");
     }
   } catch (e) {
     print(e);
