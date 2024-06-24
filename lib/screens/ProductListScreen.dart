@@ -62,15 +62,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
         backgroundColor: WHITE,
         toolbarHeight: 150,
         automaticallyImplyLeading: false,
-        // leading: InkWell(
-        //   onTap: () async {
-        //     SharedPreferences prefs = await SharedPreferences.getInstance();
-        //     prefs.clear();
-        //     Navigator.push(context,
-        //         MaterialPageRoute(builder: (builder) => LoginScreen()));
-        //   },
-        //   child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
-        // ),
+        leading: InkWell(
+          onTap: () async {
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            prefs.clear();
+            Navigator.push(context,
+                MaterialPageRoute(builder: (builder) => LoginScreen()));
+          },
+          child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
