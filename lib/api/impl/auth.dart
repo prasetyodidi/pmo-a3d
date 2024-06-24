@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'dart:convert'
 import 'package:a3d/api/index.dart';
 import 'package:a3d/components/Navbar.dart';
 import 'package:a3d/components/Snackbar.dart';
@@ -15,7 +14,7 @@ Future<void> processLogin(
   Map<String, String> formData = {
     'email': email,
     'password': password,
-    'db': 'bpp'
+    'db': 'pmo'
   };
 
   try {
@@ -155,4 +154,111 @@ Future<void> processLogout(BuildContext context) async {
   prefs.clear();
   Navigator.push(
       context, MaterialPageRoute(builder: (context) => LoginScreen()));
+}
+
+class ProfileModel {
+  int id;
+  String name; 
+  String email; 
+  String phone; 
+  String address;
+  String? image;
+
+  ProfileModel({
+    required this.id,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.address,
+    this.image,
+  });
+
+  factory ProfileModel.fromJson(Map<String, dynamic> json) {
+    return ProfileModel(
+      id: json['id'],
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone'],
+      address: json['address'],
+      image: json['image'],
+    );
+  }
+
+  Map<String, String> toJson() {
+    return {
+      'uid': id.toString(),
+      'id': id.toString(),
+      'name': name,
+      'email': email.toString(),
+      'phone': phone.toString(),
+      'address': address.toString(),
+      'image': image.toString(),
+    };
+  }
+}
+
+Future<ProfileModel> processGetProfile(BuildContext context) async {
+  ProfileModel profile = ProfileModel(id: 1, name: "", email: "", phone: "", address: "");
+  print("benerannnn ${await Prefs.getUid()}");
+  try {
+    final response = await httpClient
+        .post("/self", {'uid': (await Prefs.getUid()).toString()});
+    var responseBody = jsonDecode(response.body);
+    print(responseBody);
+    if (response.statusCode == 200) {
+      profile.id = responseBody['data']['id'];
+      profile.name = responseBody['data']['name'];
+      profile.email = responseBody['data']['email'];
+      profile.phone = responseBody['data']['phone'];
+      profile.address = responseBody['data']['address'];
+    } else {
+      showErrorSnackbar(context, "Update Profile failed: ${response.body}");
+    }
+  } catch (e) {
+    print(e);
+    showErrorSnackbar(context, "Error during Update Profile: $e");
+  }
+  return profile;
+}
+
+Future<void> processUpdateProfile(
+    BuildContext context,
+    String email,
+    String password,
+    String nama,
+    String alamat,
+    String noHp,
+    XFile logo) async {
+  Map<String, String> formData = {
+    'email': email,
+    'password': password,
+    'name': nama,
+    'address': alamat,
+    'phone': noHp,
+  };
+
+  try {
+    // Convert the XFile to MultipartFile
+    final file = await http.MultipartFile.fromPath('image_1920', logo.path);
+
+    // Send the post request with the file
+    final response = await httpClient.post("/self", formData, files: [file]);
+    var responseBody = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (responseBody['status']) {
+        showSuccessSnackbar(context, "Update Profile Berhasil!", seconds: 5);
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => PaymentScreen(name: nama)),
+        );
+      } else {
+        showErrorSnackbar(context, responseBody['message']);
+      }
+    } else {
+      showErrorSnackbar(context, "Update Profile failed: ${response.body}");
+    }
+  } catch (e) {
+    print(e);
+    showErrorSnackbar(context, "Error during Update Profile: $e");
+  }
 }

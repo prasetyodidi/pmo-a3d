@@ -3,6 +3,7 @@ import 'package:a3d/constants/index.dart';
 import 'package:a3d/screens/CartListScreen.dart';
 import 'package:a3d/screens/HistorySaleScreen.dart';
 import 'package:a3d/screens/ProductListScreen.dart';
+import 'package:a3d/screens/ProfileScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,8 +22,8 @@ class _NavbarState extends State<Navbar> {
   static const List<Widget> _widgetOptions = <Widget>[
     ProductListScreen(),
     CartListScreen(),
+    ProfileScreen(),
     HistorySaleScreen(),
-    ProductListScreen(),
   ];
 
   @override
