@@ -1,6 +1,5 @@
 import 'package:http/http.dart' as http;
 import 'dart:async';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpClient {
@@ -9,9 +8,10 @@ class HttpClient {
 
   HttpClient(this.baseUrl);
 
-  Future<http.Response> get(String endpoint) async {
+  Future<http.Response> get(String endpoint, {Map<String, String>? headers}) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    final response = await http.get(url).timeout(timeoutDuration);
+    headers = await _addSessionIdToHeaders(headers);
+    final response = await http.get(url, headers: headers).timeout(timeoutDuration);
     _handleResponse(response);
     return response;
   }
@@ -25,7 +25,9 @@ class HttpClient {
     if (files != null) {
       request.files.addAll(files);
     }
-    
+
+    request.headers.addAll(await _getSessionHeaders());
+
     final streamedResponse = await request.send().timeout(timeoutDuration);
     final response = await http.Response.fromStream(streamedResponse);
     _handleResponse(response);
@@ -40,7 +42,9 @@ class HttpClient {
     if (files != null) {
       request.files.addAll(files);
     }
-    
+
+    request.headers.addAll(await _getSessionHeaders());
+
     final streamedResponse = await request.send().timeout(timeoutDuration);
     final response = await http.Response.fromStream(streamedResponse);
     _handleResponse(response);
@@ -49,7 +53,7 @@ class HttpClient {
 
   Future<http.Response> delete(String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    final response = await http.delete(url).timeout(timeoutDuration);
+    final response = await http.delete(url, headers: await _getSessionHeaders()).timeout(timeoutDuration);
     _handleResponse(response);
     return response;
   }
@@ -61,10 +65,23 @@ class HttpClient {
       );
     }
   }
+
+  Future<Map<String, String>> _getSessionHeaders() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? sessionId = prefs.getString("session_id");
+    return sessionId != null ? {'Cookie': sessionId} : {};
+  }
+
+  Future<Map<String, String>> _addSessionIdToHeaders(Map<String, String>? headers) async {
+    headers = headers ?? {};
+    headers.addAll(await _getSessionHeaders());
+    return headers;
+  }
 }
 
 // Deklarasi variabel client secara global
-final httpClient = HttpClient('http://192.168.18.8:1876/api');
+final httpClient = HttpClient('http://192.168.197.10:1876/api');
+
 
 
 class Prefs {

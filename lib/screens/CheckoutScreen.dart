@@ -104,7 +104,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               width: 6,
                             ),
                             Text(
-                              "Penjualan",
+                              "Rangkuman",
                               style: TextStyle(
                                   fontSize: TITLE_FONTSIZE,
                                   fontWeight: FontWeight.bold),
@@ -154,7 +154,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 ],
               ),
         bottomNavigationBar: isLoading
-            ? CircularProgressIndicator()
+            ? Container(
+                width: MediaQuery.of(context).size.width,
+                height: 150,
+                color: Colors.grey.shade100,
+              )
             : Container(
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 child: Column(

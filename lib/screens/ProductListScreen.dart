@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:a3d/api/impl/product.dart';
 import 'package:a3d/components/CustomButton.dart';
 import 'package:a3d/components/CustomDialog.dart';
+import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:a3d/screens/AddProductScreen.dart';
 import 'package:a3d/screens/LoginScreen.dart';
@@ -59,32 +60,42 @@ class _ProductListScreenState extends State<ProductListScreen> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: WHITE,
-        toolbarHeight: 100,
+        toolbarHeight: 150,
         automaticallyImplyLeading: false,
-        leading: InkWell(
-          onTap: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.clear();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => LoginScreen()));
-          },
-          child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
-        ),
-        title: TextField(
-          style: TextStyle(color: BLACK),
-          onChanged: _filterProducts,
-          decoration: InputDecoration(
-            hintText: 'Search products...',
-            hintStyle: TextStyle(color: BLACK.withOpacity(0.3)),
-            labelStyle: TextStyle(color: BLACK),
-            prefixIcon: Icon(Icons.search, color: BLACK),
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none, // No border
+        // leading: InkWell(
+        //   onTap: () async {
+        //     SharedPreferences prefs = await SharedPreferences.getInstance();
+        //     prefs.clear();
+        //     Navigator.push(context,
+        //         MaterialPageRoute(builder: (builder) => LoginScreen()));
+        //   },
+        //   child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+        // ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText(
+                text: "Kelola Produk",
+                textStyle:
+                    TextStyle(color: BLACK, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 12,),
+            TextField(
+              style: TextStyle(color: BLACK),
+              onChanged: _filterProducts,
+              decoration: InputDecoration(
+                hintText: 'Search products...',
+                hintStyle: TextStyle(color: BLACK.withOpacity(0.3)),
+                labelStyle: TextStyle(color: BLACK),
+                prefixIcon: Icon(Icons.search, color: BLACK),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
       body: Padding(

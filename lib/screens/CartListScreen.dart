@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:a3d/api/impl/product.dart';
 import 'package:a3d/components/CustomButton.dart';
+import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/components/EmptyProduct.dart';
 import 'package:a3d/components/ListSkeleton.dart';
 import 'package:a3d/constants/index.dart';
@@ -97,23 +98,33 @@ class _CartListScreenState extends State<CartListScreen> {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
         backgroundColor: WHITE,
-        toolbarHeight: 100,
+        toolbarHeight: 150,
         automaticallyImplyLeading: false,
-        title: TextField(
-          style: TextStyle(color: BLACK),
-          onChanged: _filterProducts,
-          decoration: InputDecoration(
-            hintText: 'Search products...',
-            hintStyle: TextStyle(color: BLACK.withOpacity(0.3)),
-            labelStyle: TextStyle(color: BLACK),
-            prefixIcon: Icon(Icons.search, color: BLACK),
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10.0),
-              borderSide: BorderSide.none,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText(
+                text: "Buat Pesanan",
+                textStyle:
+                    TextStyle(color: BLACK, fontWeight: FontWeight.bold)),
+                    SizedBox(height: 12,),
+            TextField(
+              style: TextStyle(color: BLACK),
+              onChanged: _filterProducts,
+              decoration: InputDecoration(
+                hintText: 'Search products...',
+                hintStyle: TextStyle(color: BLACK.withOpacity(0.3)),
+                labelStyle: TextStyle(color: BLACK),
+                prefixIcon: Icon(Icons.search, color: BLACK),
+                filled: true,
+                fillColor: Colors.grey.shade100,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide.none,
+                ),
+              ),
             ),
-          ),
+          ],
         ),
       ),
       body: Padding(
@@ -193,7 +204,10 @@ class _CartListScreenState extends State<CartListScreen> {
                   ),
                   Text(
                     'Rp. ${NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0).format(product.price)}',
-                    style: TextStyle(color: BLACK, fontSize: BASE_FONTSIZE,),
+                    style: TextStyle(
+                      color: BLACK,
+                      fontSize: BASE_FONTSIZE,
+                    ),
                   ),
                 ],
               ),

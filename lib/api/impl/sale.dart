@@ -72,13 +72,15 @@ Future<void> processCreateSale(BuildContext context,
     }
   } catch (e) {
     print(e);
-    showErrorSnackbar(context, "Error during login: $e");
+    showErrorSnackbar(context, "Error: $e");
   }
 }
 
 Future<void> downloadPDF(BuildContext context, int id) async {
-  final response = await httpClient.get("/sale/pdf/${id}");
-
+  final response =
+      await httpClient.get("/sale/pdf/${id}", headers: {'Accept': 'application/pdf'});
+  print("header ${response.headers}");
+  print("bopdy ${response.body}");
   if (response.statusCode == 200) {
     bool dirDownloadExists = true;
     var directory;
@@ -95,12 +97,11 @@ Future<void> downloadPDF(BuildContext context, int id) async {
       }
     }
     final String pathnya = '$directory/Penjualan-${id}.pdf';
-    print(pathnya);
     // Tulis respons ke file PDF
     final pdfFile = File(pathnya);
     await pdfFile.writeAsBytes(response.bodyBytes);
 
-    showSuccessSnackbar(context, "Berhasil mendwondload pdf");
+    showSuccessSnackbar(context, "Berhasil mendwondload pdf pada ${pathnya}", seconds: 5);
   } else {
     showErrorSnackbar(context, 'Failed to load PDF');
   }
@@ -131,8 +132,59 @@ Future<Sale> processGetSaleById(BuildContext context, int id) async {
     }
   } catch (e) {
     print(e);
-    showErrorSnackbar(context, "Error during login: $e");
+    showErrorSnackbar(context, "Error: $e");
   }
-  print("saaalae ${sale}");
   return sale;
+}
+
+Future<List<Map<String, dynamic>>> getChart(BuildContext context) async {
+  List<Map<String, dynamic>> chartDatas = [];
+  try {
+    Map<String, String> formData = {
+      'uid': (await Prefs.getUid()).toString(),
+    };
+
+    final response = await httpClient.post("/sale/chart", formData);
+    var responseBody = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (responseBody['status']) {
+        List<dynamic> data = responseBody['data'];
+        chartDatas = data.map((item) => item as Map<String, dynamic>).toList();
+      } else {
+        showErrorSnackbar(context, responseBody['message']);
+      }
+    } else {
+      showErrorSnackbar(context, "Failed: ${response.body}");
+    }
+  } catch (e) {
+    print(e);
+    showErrorSnackbar(context, "Error: $e");
+  }
+  return chartDatas;
+}
+
+Future<List<Map<String, dynamic>>> getAllSale(BuildContext context) async {
+  List<Map<String, dynamic>> sales = [];
+  try {
+    Map<String, String> formData = {
+      'uid': (await Prefs.getUid()).toString(),
+    };
+
+    final response = await httpClient.post("/sale/get_all", formData);
+    var responseBody = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      if (responseBody['status']) {
+        List<dynamic> data = responseBody['data'];
+        sales = data.map((item) => item as Map<String, dynamic>).toList();
+      } else {
+        showErrorSnackbar(context, responseBody['message']);
+      }
+    } else {
+      showErrorSnackbar(context, "Failed: ${response.body}");
+    }
+  } catch (e) {
+    print(e);
+    showErrorSnackbar(context, "Error: $e");
+  }
+  return sales;
 }

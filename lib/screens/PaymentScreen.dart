@@ -98,7 +98,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     height: 12,
                   ),
                   CustomButton(
-                    backgroundColor: Colors.black.withOpacity(0.6),
+                   backgroundColor: Colors.black,
+                  textColor: Colors.white,
                     text: 'Upload Bukti Pembayaran',
                     onPressed: () async {
                       XFile? image = await showImagePicker(context);
