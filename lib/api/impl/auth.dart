@@ -1,9 +1,10 @@
-import 'dart:convert'
+import 'dart:convert';
 import 'package:a3d/api/index.dart';
 import 'package:a3d/components/Navbar.dart';
 import 'package:a3d/components/Snackbar.dart';
 import 'package:a3d/screens/LoginScreen.dart';
 import 'package:a3d/screens/PaymentScreen.dart';
+import 'package:a3d/screens/ProfileScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +15,7 @@ Future<void> processLogin(
   Map<String, String> formData = {
     'email': email,
     'password': password,
-    'db': 'pmo'
+    'db': 'bpp'
   };
 
   try {
@@ -202,7 +203,7 @@ Future<ProfileModel> processGetProfile(BuildContext context) async {
   print("benerannnn ${await Prefs.getUid()}");
   try {
     final response = await httpClient
-        .post("/self", {'uid': (await Prefs.getUid()).toString()});
+        .post("/me", {'uid': (await Prefs.getUid()).toString()});
     var responseBody = jsonDecode(response.body);
     print(responseBody);
     if (response.statusCode == 200) {
@@ -211,6 +212,7 @@ Future<ProfileModel> processGetProfile(BuildContext context) async {
       profile.email = responseBody['data']['email'];
       profile.phone = responseBody['data']['phone'];
       profile.address = responseBody['data']['address'];
+      profile.image = responseBody['data']['logo'];
     } else {
       showErrorSnackbar(context, "Update Profile failed: ${response.body}");
     }
@@ -235,6 +237,7 @@ Future<void> processUpdateProfile(
     'name': nama,
     'address': alamat,
     'phone': noHp,
+    'uid': (await Prefs.getUid()).toString()
   };
 
   try {
@@ -249,7 +252,7 @@ Future<void> processUpdateProfile(
         showSuccessSnackbar(context, "Update Profile Berhasil!", seconds: 5);
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => PaymentScreen(name: nama)),
+          MaterialPageRoute(builder: (context) => ProfileScreen()),
         );
       } else {
         showErrorSnackbar(context, responseBody['message']);

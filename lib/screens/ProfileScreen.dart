@@ -3,12 +3,14 @@ import 'package:a3d/api/impl/auth.dart';
 import 'package:a3d/components/CustomButton.dart';
 import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/components/CustomTextField.dart';
+import 'package:a3d/components/ListSkeleton.dart';
 import 'package:a3d/constants/index.dart';
-import 'package:a3d/screens/LoginScreen.dart';
+import 'package:a3d/helpers/index.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:a3d/components/ImagePicker.dart';
+
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -25,9 +27,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _addressController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool isLoadingUpdateProfile = false;
-  bool isLoading = false;
+  bool isLoading = true;
   XFile? _storeLogo;
-  ProfileModel profile = ProfileModel(id: 1, name: "name", email: "email", phone: "phone", address: "address");
+  ProfileModel profile = ProfileModel(
+      id: 1, name: "name", email: "email", phone: "phone", address: "address");
 
   @override
   void initState() {
@@ -47,6 +50,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _nameController.text = val.name;
         _emailController.text = val.email;
         _phoneController.text = val.phone;
+        _addressController.text = val.address;
+        _storeLogo = base64StringToXFile(val.image);
         isLoading = false;
       });
     });
@@ -60,15 +65,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: WHITE,
         toolbarHeight: 100,
         automaticallyImplyLeading: false,
-        leading: InkWell(
-          onTap: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.clear();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => LoginScreen()));
-          },
-          child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
-        ),
+        centerTitle: true,
+        // leading: InkWell(
+        //   onTap: () async {
+        //     SharedPreferences prefs = await SharedPreferences.getInstance();
+        //     prefs.clear();
+        //     Navigator.push(context,
+        //         MaterialPageRoute(builder: (builder) => LoginScreen()));
+        //   },
+        //   child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+        // ),
         title: CustomText(
           text: "Profil Kamu",
           textStyle: TextStyle(
@@ -81,11 +87,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0.0),
         child: isLoading
-            ? Text("on loading...")
+            ? ListSkeleton()
             : SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 0),
                 child: Form(
-                  autovalidateMode: AutovalidateMode.always,
+                  // autovalidateMode: AutovalidateMode.always,
                   key: _formKey,
                   child: Column(
                     children: [
@@ -93,7 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText: 'Nama',
                         controller: _nameController,
                         obscureText: false,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Nama Wajib diisi';
@@ -105,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText: 'Email',
                         controller: _emailController,
                         obscureText: false,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.emailAddress,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Email Wajib diisi';
@@ -129,7 +134,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         labelText: 'Alamat',
                         controller: _addressController,
                         obscureText: false,
-                        keyboardType: TextInputType.number,
+                        keyboardType: TextInputType.text,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Alamat Wajib diisi';
@@ -142,24 +147,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         obscureText: true,
                         controller: _passwordController,
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Password is required';
-                          }
+                          
                           return null;
                         },
                       ),
-                      Container(
-                        child: _storeLogo == null
-                            ? Container(
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.width,
-                                color: Colors.grey[300],
-                                child: Icon(Icons.image, size: 50),
-                              )
-                            : Image.file(
-                                File(_storeLogo!.path),
-                                width: MediaQuery.of(context).size.width,
-                              ),
+                       InkWell(
+                onTap: () async {
+                  XFile? image = await showImagePicker(context);
+                  setState(() {
+                    _storeLogo = image;
+                  });
+                },
+                child: Container(
+                  child: _storeLogo == null
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          color: Colors.grey[300],
+                          child: Icon(Icons.add_photo_alternate, size: 50),
+                        )
+                      : Stack(children: [
+                          Positioned(
+                            child: Icon(
+                              Icons.change_circle,
+                              color: BLACK,
+                              size: 50,
+                            ),
+                            
+                            bottom: 0,
+                            right: 0,
+                          ),
+                          Image.file(
+                            File(_storeLogo!.path),
+                            width: MediaQuery.of(context).size.width,
+                          ),
+                        ]),
+                ),
+              ),
+                      SizedBox(
+                        height: 24,
                       ),
                       CustomButton(
                         text: isLoadingUpdateProfile ? '...' : 'Update',

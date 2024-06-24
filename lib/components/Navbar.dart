@@ -22,8 +22,8 @@ class _NavbarState extends State<Navbar> {
   static const List<Widget> _widgetOptions = <Widget>[
     ProductListScreen(),
     CartListScreen(),
-    ProfileScreen(),
     HistorySaleScreen(),
+    ProfileScreen(),
   ];
 
   @override

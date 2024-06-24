@@ -6,14 +6,12 @@ import 'package:a3d/components/CustomDialog.dart';
 import 'package:a3d/components/CustomText.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:a3d/screens/AddProductScreen.dart';
-import 'package:a3d/screens/LoginScreen.dart';
 import 'package:a3d/screens/UpdateProductScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import 'package:a3d/components/EmptyProduct.dart';
 import 'package:a3d/components/ListSkeleton.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({Key? key}) : super(key: key);
@@ -62,15 +60,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         backgroundColor: WHITE,
         toolbarHeight: 150,
         automaticallyImplyLeading: false,
-        leading: InkWell(
-          onTap: () async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            prefs.clear();
-            Navigator.push(context,
-                MaterialPageRoute(builder: (builder) => LoginScreen()));
-          },
-          child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
-        ),
+
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
