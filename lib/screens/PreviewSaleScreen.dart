@@ -50,25 +50,29 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.white,
+          backgroundColor: BACKGROUND,
           automaticallyImplyLeading: false,
           title: Text(
-            "Pesanan Baru",
+            "Detail Penjualan",
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black,
+              color: GREY,
             ),
           ),
           leading: InkWell(
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (builder) => Navbar()));
+                  context,
+                  MaterialPageRoute(
+                      builder: (builder) => Navbar(
+                            initialIndex: 1,
+                          )));
             },
-            child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+            child: Icon(Icons.chevron_left, color: GREY, size: 35),
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: BACKGROUND,
         body: isLoading
             ? Padding(
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
@@ -96,41 +100,13 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
                               DateFormat('dd MMMM yyyy')
                                   .format(DateTime.parse(sale.date)),
                               style: TextStyle(
-                                  fontSize: TITLE_FONTSIZE,
-                                  fontWeight: FontWeight.bold),
+                                fontSize: TITLE_FONTSIZE,
+                              ),
                             ),
                           ],
                         ),
                         SizedBox(
                           height: 8,
-                        ),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              CupertinoIcons.app_badge,
-                              color: BLACK,
-                            ),
-                            SizedBox(
-                              width: 6,
-                            ),
-                            Text(
-                              "Penjualan",
-                              style: TextStyle(
-                                  fontSize: TITLE_FONTSIZE,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        _summarize("ID Penjualan", sale.id.toString()),
-                        _summarize(
-                            "Total Produk", sale.line_ids.length.toString()),
-                        _summarize("Total", _formatCurrency(sale.total)),
-                        SizedBox(
-                          height: 16,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -145,8 +121,8 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
                             Text(
                               "Produk Terjual",
                               style: TextStyle(
-                                  fontSize: TITLE_FONTSIZE,
-                                  fontWeight: FontWeight.bold),
+                                fontSize: TITLE_FONTSIZE,
+                              ),
                             ),
                           ],
                         ),
@@ -161,6 +137,14 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
                       },
                     ),
                   ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    child: _LeftRightText(
+                      "Total Penjualan",
+                      _formatCurrency(sale.line_ids
+                          .fold(0, (sum, product) => sum + product.subtotal)),
+                    ),
+                  ),
                 ],
               ),
         bottomNavigationBar: isLoading
@@ -172,7 +156,6 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
             : Padding(
                 padding: EdgeInsets.all(20),
                 child: CustomButton(
-
                   onPressed: () {
                     print("hahaha");
                     setState(() {
@@ -196,10 +179,11 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
 
     return Container(
       height: 120,
-      padding: EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.only(right: 20),
+      margin: EdgeInsets.only(bottom: 8, left: 20, right: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
+        color: WHITE,
       ),
       child: Row(
         children: [
@@ -228,26 +212,24 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
                     product.name,
                     maxLines: 3,
                     style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
+                      color: BLACK,
                       fontSize: 18,
                     ),
                   ),
                   SizedBox(height: 4),
                   Text(
-                    '${_formatCurrency(product.subtotal)} x ${product.quantity.toString()}',
-                    style: TextStyle(color: Colors.black, fontSize: 16),
+                    _formatCurrency(product.subtotal),
+                    style: TextStyle(color: SEMIBLACK, fontSize: 16),
                   ),
                 ],
               ),
             ),
           ),
           Text(
-            _formatCurrency(product.subtotal),
+            "${product.quantity}x",
             style: TextStyle(
               fontSize: 16,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
+              color: SEMIBLACK,
             ),
           ),
         ],
@@ -255,21 +237,23 @@ class _PreviewSaleScreenState extends State<PreviewSaleScreen> {
     );
   }
 
-  Widget _LeftRightText(String left, String right, TextStyle rightStyle) {
+  Widget _LeftRightText(String left, String right) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
           left,
           style: TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+            color: SEMIBLACK,
+            fontSize: BASE_FONTSIZE,
           ),
         ),
         Text(
           right,
-          style: rightStyle,
+          style: TextStyle(
+            color: BLACK,
+            fontSize: BASE_FONTSIZE,
+          ),
         ),
       ],
     );

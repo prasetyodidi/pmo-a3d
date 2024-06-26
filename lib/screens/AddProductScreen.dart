@@ -7,6 +7,7 @@ import 'package:a3d/api/impl/product.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:a3d/components/ImagePicker.dart';
+import 'package:a3d/constants/index.dart';
 
 class AddProductScreen extends StatefulWidget {
   const AddProductScreen({Key? key}) : super(key: key);
@@ -35,23 +36,23 @@ class _AddProductScreenState extends State<AddProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: BACKGROUND,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+          child: Icon(Icons.chevron_left, color: GREY, size: 35),
         ),
         title: CustomText(
           text: "Tambah Produk Baru",
           textStyle: TextStyle(
-            color: Colors.black,
+            color: GREY,
             fontSize: BIG_TITLE_FONTSIZE,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: BACKGROUND,
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 24),
         child: Form(
@@ -74,7 +75,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                   return null;
                 },
               ),
-              SizedBox(height: 12),
+              SizedBox(height: 6),
               // Text Field: Price
               CustomTextField(
                 labelText: 'Harga',
@@ -102,13 +103,21 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ? Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width,
-                          color: Colors.grey[300],
-                          child: Icon(Icons.add_photo_alternate, size: 50),
+                          child: Icon(Icons.add_photo_alternate_sharp, size: 50),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(12)),
                         )
-                      : Image.file(
-                          File(_productImage!.path),
-                          width: MediaQuery.of(context).size.width,
-                        ),
+                      : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
+                            File(_productImage!.path),
+                            width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.width,
+                          
+                          ),
+                      ),
                 ),
               ),
               SizedBox(height: 12),

@@ -18,20 +18,23 @@ class _HistorySaleScreenState extends State<HistorySaleScreen> {
   List<Map<String, dynamic>> chartDatas = [];
   List<Map<String, dynamic>> sales = [];
   bool isLoading = true;
+
   @override
   void initState() {
-    // TODO: implement initState
     getChart(context).then((val) {
-      setState(() {
-        chartDatas = val;
-      });
-      getAllSale(context).then((salesResponse) {
-        print(salesResponse);
+      if (mounted) {
         setState(() {
-          sales = salesResponse;
-          isLoading = false;
+          chartDatas = val;
         });
-      });
+        getAllSale(context).then((salesResponse) {
+          if (mounted) {
+            setState(() {
+              sales = salesResponse;
+              isLoading = false;
+            });
+          }
+        });
+      }
     });
     super.initState();
   }
@@ -41,7 +44,7 @@ class _HistorySaleScreenState extends State<HistorySaleScreen> {
     return Scaffold(
       backgroundColor: WHITE,
       body: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: BACKGROUND,
         body: Padding(
           padding: EdgeInsets.only(top: 100, left: 20, right: 20),
           child: Column(
@@ -50,49 +53,52 @@ class _HistorySaleScreenState extends State<HistorySaleScreen> {
               isLoading
                   ? SkeletonItem()
                   : Chart(
-                      chartDatas:
-                          chartDatas), // Berikan jarak antara Chart dan daftar penjualan
+                      chartDatas: chartDatas,
+                    ),
               Expanded(
                 child: isLoading
-                    ? SkeletonItem() // Menampilkan SkeletonItem jika sedang memuat
+                    ? SkeletonItem()
                     : ListView.builder(
                         itemCount: sales.length,
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              print("kontol");
-                              Navigator.push(context, MaterialPageRoute(
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
                                   builder: (context) => PreviewSaleScreen(
-                                      sale_id: sales[index]['id'])));
+                                    sale_id: sales[index]['id'],
+                                  ),
+                                ),
+                              );
                             },
                             child: Container(
                               width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                               margin: EdgeInsets.symmetric(vertical: 4),
-                              color: Colors.grey.shade100,
+                              decoration: BoxDecoration(color: WHITE, borderRadius: BorderRadius.circular(12)),
                               child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          sales[index]['date'],
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        sales[index]['date'],
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
                                         ),
-                                        Text(
-                                          "${sales[index]['line_ids'].length} Produk",
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      _formatCurrency(sales[index]['total']),
-                                    ),
-                                  ]),
+                                      ),
+                                      Text(
+                                        "${sales[index]['line_ids'].length} Produk",
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    _formatCurrency(sales[index]['total']),
+                                  ),
+                                ],
+                              ),
                             ),
                           );
                         },

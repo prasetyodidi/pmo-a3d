@@ -31,7 +31,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: BACKGROUND,
         body: Center(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 60),
@@ -84,21 +84,29 @@ class _PaymentScreenState extends State<PaymentScreen> {
                   Container(
                     child: _paymentImage == null
                         ? Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.width,
-                            color: Colors.grey[300],
-                            child: Icon(Icons.image, size: 50),
-                          )
-                        : Image.file(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.width,
+                          child: Icon(Icons.image, size: 50),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(12)),
+                        )
+                      : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
                             File(_paymentImage!.path),
                             width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.width,
+                          
                           ),
+                      ),
                   ),
                   SizedBox(
                     height: 12,
                   ),
                   CustomButton(
-                   backgroundColor: Colors.black,
+                   backgroundColor: GREY,
                   textColor: Colors.white,
                     text: 'Upload Bukti Pembayaran',
                     onPressed: () async {

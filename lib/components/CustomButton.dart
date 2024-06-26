@@ -11,8 +11,8 @@ class CustomButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onPressed,
-    this.backgroundColor = Colors.green,
-    this.textColor = Colors.green
+    this.backgroundColor = const Color(0xff9B51E0),
+    this.textColor = Colors.white
   }) : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class CustomButton extends StatelessWidget {
       child: TextButton(
         onPressed: onPressed,
         style: TextButton.styleFrom(
-          backgroundColor: backgroundColor?.withOpacity(0.2),
+          backgroundColor: backgroundColor,
           padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10), // Adjust the value as needed

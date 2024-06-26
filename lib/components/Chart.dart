@@ -82,7 +82,7 @@ class _ChartState extends State<Chart> {
                           getTooltipItems: (touchedSpots) {
                             return touchedSpots.map((touchedSpot) {
                               return LineTooltipItem(
-                                'Date: ${widget.chartDatas[touchedSpot.spotIndex]['date']}\nchartDatas: ${_formatCurrency(widget.chartDatas[touchedSpot.spotIndex]['total'])}',
+                                'Date: ${widget.chartDatas[touchedSpot.spotIndex]['date']}\nTotal: ${_formatCurrency(widget.chartDatas[touchedSpot.spotIndex]['total'])}',
                                 const TextStyle(
                                     color: Colors.white, fontSize: 10),
                               );
@@ -119,8 +119,7 @@ class _ChartState extends State<Chart> {
                       borderData: FlBorderData(
                         show: true,
                         border: Border(
-                          bottom: BorderSide(
-                              color: Colors.green.withOpacity(0.2), width: 4),
+                          bottom: BorderSide(color: SEMIBLACK, width: 4),
                           left: const BorderSide(color: Colors.transparent),
                           right: const BorderSide(color: Colors.transparent),
                           top: const BorderSide(color: Colors.transparent),
@@ -150,10 +149,16 @@ class _ChartState extends State<Chart> {
       ];
 
   LineChartBarData get lineChartBarData1_1 => LineChartBarData(
-        color: Colors.green,
+        preventCurveOverShooting: true,
+        gradient: LinearGradient(colors: [
+          BLACK,
+          PURPLE,
+          RED,
+          PURPLE2
+        ]),
         barWidth: 3,
-        dotData: const FlDotData(show: true),
-        belowBarData: BarAreaData(show: false, color: Colors.green.shade100),
+        dotData: const FlDotData(show: true, ),
+        belowBarData: BarAreaData(show: true, color: SEMIBLACK.withOpacity(0.2)),
         spots: List.generate(widget.chartDatas.length, (index) {
           return FlSpot(index.toDouble(),
               (widget.chartDatas[index]['total'] / 1000).toDouble());

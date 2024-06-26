@@ -6,11 +6,12 @@ import 'package:a3d/components/CustomTextField.dart';
 import 'package:a3d/components/ListSkeleton.dart';
 import 'package:a3d/constants/index.dart';
 import 'package:a3d/helpers/index.dart';
+import 'package:a3d/screens/LoginScreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:a3d/components/ImagePicker.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -60,9 +61,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: BACKGROUND,
       appBar: AppBar(
-        backgroundColor: WHITE,
+        backgroundColor: BACKGROUND,
         toolbarHeight: 100,
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -73,12 +74,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         //     Navigator.push(context,
         //         MaterialPageRoute(builder: (builder) => LoginScreen()));
         //   },
-        //   child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+        //   child: Icon(Icons.chevron_left, color: GREY, size: 35),
         // ),
         title: CustomText(
           text: "Profil Kamu",
           textStyle: TextStyle(
-            color: Colors.black,
+            color: GREY,
             fontSize: BIG_TITLE_FONTSIZE,
             fontWeight: FontWeight.bold,
           ),
@@ -147,43 +148,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         obscureText: true,
                         controller: _passwordController,
                         validator: (value) {
-                          
                           return null;
                         },
                       ),
-                       InkWell(
-                onTap: () async {
-                  XFile? image = await showImagePicker(context);
-                  setState(() {
-                    _storeLogo = image;
-                  });
-                },
-                child: Container(
-                  child: _storeLogo == null
-                      ? Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: MediaQuery.of(context).size.width,
-                          color: Colors.grey[300],
-                          child: Icon(Icons.add_photo_alternate, size: 50),
-                        )
-                      : Stack(children: [
-                          Positioned(
-                            child: Icon(
-                              Icons.change_circle,
-                              color: BLACK,
-                              size: 50,
-                            ),
-                            
-                            bottom: 0,
-                            right: 0,
-                          ),
-                          Image.file(
-                            File(_storeLogo!.path),
-                            width: MediaQuery.of(context).size.width,
-                          ),
-                        ]),
-                ),
-              ),
+                      InkWell(
+                        onTap: () async {
+                          XFile? image = await showImagePicker(context);
+                          setState(() {
+                            _storeLogo = image;
+                          });
+                        },
+                        child: Container(
+                          child: _storeLogo == null
+                              ? Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  height: MediaQuery.of(context).size.width,
+                                  child: Icon(Icons.image, size: 50),
+                                  decoration: BoxDecoration(
+                                      color: Colors.grey[300],
+                                      borderRadius: BorderRadius.circular(12)),
+                                )
+                              : ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Image.file(
+                                    File(_storeLogo!.path),
+                                    width: MediaQuery.of(context).size.width,
+                                    fit: BoxFit.cover,
+                                    height: MediaQuery.of(context).size.width,
+                                  ),
+                                ),
+                        ),
+                      ),
                       SizedBox(
                         height: 24,
                       ),
@@ -210,6 +205,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           });
                         },
                       ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      CustomButton(
+                          text: "Logout",
+                          backgroundColor: GREY,
+                          onPressed: () async {
+                            SharedPreferences prefs =
+                                await SharedPreferences.getInstance();
+                            prefs.clear();
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (builder) => LoginScreen()));
+                          })
                     ],
                   ),
                 ),

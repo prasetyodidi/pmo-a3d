@@ -58,23 +58,23 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: BACKGROUND,
         leading: InkWell(
           onTap: () {
             Navigator.pop(context);
           },
-          child: Icon(Icons.chevron_left, color: Colors.black, size: 35),
+          child: Icon(Icons.chevron_left, color: GREY, size: 35),
         ),
         title: CustomText(
           text: "Update Produk ${widget.name}",
           textStyle: TextStyle(
-            color: Colors.black,
+            color: GREY,
             fontSize: BIG_TITLE_FONTSIZE,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      backgroundColor: Colors.white,
+      backgroundColor: BACKGROUND,
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 24),
         child: Form(
@@ -125,23 +125,21 @@ class _UpdateProductScreenState extends State<UpdateProductScreen> {
                       ? Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width,
-                          color: Colors.grey[300],
-                          child: Icon(Icons.add_photo_alternate, size: 50),
+                          child: Icon(Icons.add_photo_alternate_sharp, size: 50),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(12)),
                         )
-                      : Stack(children: [
-                          Positioned(
-                            child: Icon(
-                              Icons.change_circle,
-                              color: BLACK,
-                            ),
-                            bottom: 0,
-                            right: 0,
-                          ),
-                          Image.file(
+                      : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
                             File(_productImage!.path),
                             width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.width,
+                          
                           ),
-                        ]),
+                      ),
                 ),
               ),
               SizedBox(height: 12),

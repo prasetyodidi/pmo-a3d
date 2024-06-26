@@ -55,10 +55,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: BACKGROUND,
       appBar: AppBar(
-        backgroundColor: WHITE,
-        toolbarHeight: 150,
+        backgroundColor: BACKGROUND,
+        toolbarHeight: 200,
         automaticallyImplyLeading: false,
 
         title: Column(
@@ -67,7 +67,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
             CustomText(
                 text: "Kelola Produk",
                 textStyle:
-                    TextStyle(color: BLACK, fontWeight: FontWeight.bold)),
+                    TextStyle(color: BLACK, fontSize: BIG_TITLE_FONTSIZE,fontWeight: FontWeight.w500)),
+                    SizedBox(height: 6,),
+                    CustomText(
+                text: "Kelola produk yang akan Anda jual disini.",
+                textStyle:
+                    TextStyle(color: SEMIBLACK, fontSize: BASE_FONTSIZE)),
                     SizedBox(height: 12,),
             TextField(
               style: TextStyle(color: BLACK),
@@ -78,7 +83,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 labelStyle: TextStyle(color: BLACK),
                 prefixIcon: Icon(Icons.search, color: BLACK),
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: WHITE,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
                   borderSide: BorderSide.none,
@@ -111,10 +116,10 @@ class _ProductListScreenState extends State<ProductListScreen> {
         },
         child: Icon(
           Icons.add,
-          color: Colors.green,
+          color: WHITE,
         ),
         elevation: 0,
-        backgroundColor: Colors.green.withOpacity(0.2),
+        backgroundColor: PURPLE,
       ),
     );
   }
@@ -125,6 +130,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
     return Container(
       height: 124,
+      margin: EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -158,7 +164,6 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     maxLines: 3,
                     style: TextStyle(
                         color: BLACK,
-                        fontWeight: FontWeight.bold,
                         fontSize: 18),
                   ),
                   SizedBox(
@@ -166,7 +171,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                   ),
                   Text(
                     'Rp. ${NumberFormat.currency(locale: 'id_ID', symbol: '', decimalDigits: 0).format(product.price)}',
-                    style: TextStyle(color: BLACK, fontSize: BASE_FONTSIZE),
+                    style: TextStyle(color: SEMIBLACK, fontSize: BASE_FONTSIZE),
                   ),
                 ],
               ),
@@ -174,7 +179,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
           ),
           Container(
             decoration:BoxDecoration(
-              color: Colors.blue.withOpacity(0.2),
+              color: BLUE,
               borderRadius: BorderRadius.circular(12)
             ) ,
             child: IconButton(
@@ -189,13 +194,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
                             price: product.price.toString())));
               },
               icon: Icon(Icons.edit_outlined),
-              color: Colors.blue,
+              color: WHITE,
             ),
           ),
-          SizedBox(width: 4,),
           Container(
+            margin: EdgeInsets.only(left: 8, right: 16),
             decoration:BoxDecoration(
-              color: Colors.red.withOpacity(0.2),
+              color: RED,
               borderRadius: BorderRadius.circular(12)
             ) ,
             child: IconButton(
@@ -209,6 +214,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                       actions: [
                         CustomButton(
                             text: "Hapus",
+                            backgroundColor: GREY,
                             onPressed: () {
                               setState(() {
                                 isLoading = true;
@@ -225,7 +231,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
                 );
               },
               icon: Icon(Icons.delete),
-              color: Colors.red,
+              color: WHITE,
             ),
           )
         ],

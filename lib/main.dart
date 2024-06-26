@@ -2,6 +2,7 @@ import 'package:a3d/components/Navbar.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:a3d/screens/LoginScreen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -24,10 +25,11 @@ class MyApp extends StatelessWidget {
         ).copyWith(
           secondary: Colors.white,
         ),
-        textTheme: const TextTheme(
-          bodyMedium: TextStyle(color: Colors.black),
-          headlineMedium: TextStyle(color: Colors.black),
+        textTheme: TextTheme(
+          bodyMedium: GoogleFonts.poppins(color: Colors.black),
+          headlineMedium: GoogleFonts.poppins(color: Colors.black),
         ),
+        fontFamily: GoogleFonts.poppins().fontFamily, // Set the default font family
         useMaterial3: true,
       ),
       home: const MyAppStateful(), // Using a stateful widget for better control

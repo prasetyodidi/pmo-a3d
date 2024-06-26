@@ -27,24 +27,26 @@ class CustomTextField extends StatelessWidget {
         keyboardType: keyboardType,
         style: TextStyle(color: BLACK),
         decoration: InputDecoration(
+          filled: true,
+          fillColor: WHITE,
           labelText: labelText,
           labelStyle: TextStyle(color: BLACK),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: GREY),
-            borderRadius: BorderRadius.circular(10.0), // Rounded corners with radius 10
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(12.0),
           ),
           errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: RED),
-            borderRadius: BorderRadius.circular(10.0), // Rounded corners with radius 10
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(12.0),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: BLACK),
-            borderRadius: BorderRadius.circular(10.0), // Rounded corners with radius 10
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(12.0),
           ),
-          focusedErrorBorder:OutlineInputBorder(
-            borderSide: BorderSide(color: RED),
-            borderRadius: BorderRadius.circular(10.0), // Rounded corners with radius 10
-          ), 
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide.none,
+            borderRadius: BorderRadius.circular(12.0),
+          ),
         ),
         validator: validator, // Validator function added here
       ),

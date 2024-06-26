@@ -1,3 +1,4 @@
+import 'package:a3d/constants/index.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -11,6 +12,7 @@ Future<XFile?> showImagePicker(BuildContext context) async {
         child: Wrap(
           children: <Widget>[
             ListTile(
+              tileColor: BLUE,
               leading: Icon(Icons.photo_library),
               title: Text('Gallery'),
               onTap: () async {
@@ -19,6 +21,7 @@ Future<XFile?> showImagePicker(BuildContext context) async {
               },
             ),
             ListTile(
+              tileColor: BLUE,
               leading: Icon(Icons.photo_camera),
               title: Text('Camera'),
               onTap: () async {

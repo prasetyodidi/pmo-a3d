@@ -60,7 +60,7 @@ class _NavbarState extends State<Navbar> {
                 label: 'Home',
               ),
               BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.cart),
+                icon: Icon(CupertinoIcons.cart_fill),
                 label: 'Search',
               ),
               BottomNavigationBarItem(
@@ -75,12 +75,11 @@ class _NavbarState extends State<Navbar> {
             currentIndex: _selectedIndex,
             elevation: 0,
             backgroundColor: WHITE,
-            selectedItemColor: Colors.green,
-            unselectedItemColor: Colors.black.withOpacity(0.3),
+            selectedItemColor: GREY,
+            unselectedItemColor: SEMIBLACK,
             onTap: _onItemTapped,
             showSelectedLabels: false,
             iconSize: 27,
-
             showUnselectedLabels: false,
             type: BottomNavigationBarType.fixed,
           ),

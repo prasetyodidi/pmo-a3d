@@ -29,7 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: BACKGROUND,
       body: Center(
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 60),
@@ -53,7 +53,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: CustomText(
                       text: "Daftar",
                       textStyle: TextStyle(
-                          fontSize: TITLE_FONTSIZE, fontWeight: FontWeight.bold)),
+                          fontSize: TITLE_FONTSIZE,
+                          fontWeight: FontWeight.bold)),
                 ),
                 Container(
                   child: CustomText(
@@ -131,19 +132,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ? Container(
                           width: MediaQuery.of(context).size.width,
                           height: MediaQuery.of(context).size.width,
-                          color: Colors.grey[300],
                           child: Icon(Icons.image, size: 50),
+                          decoration: BoxDecoration(
+                              color: Colors.grey[300],
+                              borderRadius: BorderRadius.circular(12)),
                         )
-                      : Image.file(
-                          File(_storeLogo!.path),
-                          width: MediaQuery.of(context).size.width,
-                        ),
+                      : ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.file(
+                            File(_storeLogo!.path),
+                            width: MediaQuery.of(context).size.width,
+                            fit: BoxFit.cover,
+                            height: MediaQuery.of(context).size.width,
+                          
+                          ),
+                      ),
                 ),
                 SizedBox(
                   height: 12,
                 ),
                 CustomButton(
-                  backgroundColor: Colors.black,
+                  backgroundColor: GREY,
                   textColor: Colors.white,
                   text: 'Upload Logo',
                   onPressed: () async {
@@ -160,12 +169,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 CustomButton(
                   text: isLoadingRegister ? '...' : 'Register',
                   onPressed: () {
-                    if (isLoadingRegister || !_formKey.currentState!.validate()) return; // Check if the form is valid
+                    if (isLoadingRegister || !_formKey.currentState!.validate())
+                      return; // Check if the form is valid
                     setState(() {
                       isLoadingRegister = true;
                     });
                     // Registration logic
-                    processRegister(context,  _emailController.text, _passwordController.text, _nameController.text, _addressController.text, _phoneController.text, _storeLogo!).then((v) {
+                    processRegister(
+                            context,
+                            _emailController.text,
+                            _passwordController.text,
+                            _nameController.text,
+                            _addressController.text,
+                            _phoneController.text,
+                            _storeLogo!)
+                        .then((v) {
                       setState(() {
                         isLoadingRegister = false;
                       });
@@ -184,8 +202,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (builder) => LoginScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (builder) => LoginScreen()));
                       },
                       child: CustomText(
                           text: "Login",

@@ -80,7 +80,7 @@ class HttpClient {
 }
 
 // Deklarasi variabel client secara global
-final httpClient = HttpClient('http://192.168.99.10:1876/api');
+final httpClient = HttpClient('http://192.168.18.8:1876/api');
 
 
 
